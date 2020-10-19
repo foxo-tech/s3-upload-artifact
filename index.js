@@ -9,18 +9,12 @@ try {
   const inputPath = core.getInput('path');
   const inputKey = core.getInput('key');
 
-  const key = path.join(
-    github.context.payload.repository.full_name,
-    github.context.sha,
-    inputKey,
-  );
-
   const stream = fs.createReadStream(inputPath);
 
   AWS.config.update({ region: process.env.AWS_REGION || 'us-east-1' });
   s3 = new AWS.S3({ apiVersion: process.env.AWS_API_VERISON || '2006-03-01' });
 
-  s3.upload({ Bucket: inputBucket, Key: key, Body: stream }, (err, data) => {
+  s3.upload({ Bucket: inputBucket, Key: inputKey, Body: stream }, (err, data) => {
     if (err) {
       throw err;
     }
